@@ -1058,3 +1058,173 @@ body {
     text-transform: uppercase;
 }
 
+/* Mobile App Optimization (max-width: 600px) */
+@media (max-width: 600px) {
+    body {
+        height: auto;
+        overflow-y: auto;
+        font-size: 14px;
+    }
+    
+    .main-container {
+        padding: 0.75rem;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .card {
+        padding: 1.25rem 1rem;
+        border-radius: var(--border-radius-md);
+    }
+    
+    .app-header {
+        padding: 1rem 0.75rem;
+        text-align: center;
+    }
+    
+    .app-title {
+        font-size: 1.5rem !important;
+    }
+    
+    .lead-text {
+        font-size: 0.9rem;
+    }
+
+    /* Step 1: Time Audit Mobile */
+    .grid-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .chart-panel {
+        order: -1; /* Place chart on top on mobile */
+        height: 220px;
+        padding: 0.5rem;
+    }
+    
+    .time-inputs-list {
+        max-height: none;
+        overflow-y: visible;
+    }
+    
+    .time-input-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .time-input-row label {
+        width: 100%;
+        font-size: 0.85rem;
+    }
+    
+    .time-range-input {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .time-number-input {
+        width: 55px;
+    }
+
+    /* Step 2: Roles Board Mobile */
+    .sticky-board {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+        gap: 0.5rem !important;
+        padding: 0.5rem !important;
+        max-height: 180px;
+        overflow-y: auto;
+    }
+    
+    .sticky-note {
+        min-height: 75px !important;
+        padding: 0.4rem !important;
+        font-size: 0.7rem !important;
+    }
+    
+    .role-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .role-input-group input,
+    .role-input-group select,
+    .role-input-group button {
+        width: 100%;
+    }
+
+    /* Step 3: Empty Chair Mobile */
+    .chair-container {
+        padding: 1.5rem 1rem;
+    }
+    
+    .chair-spotlight {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .chair-spotlight i {
+        font-size: 1.5rem;
+    }
+
+    /* Step 4: Summary Mobile */
+    .summary-sections-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    
+    .summary-card {
+        padding: 1rem !important;
+    }
+    
+    .contribution-display {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .summary-time-chart-container {
+        height: 180px;
+    }
+    
+    .summary-meta-user {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: center;
+        background-color: var(--bg-secondary);
+        padding: 0.5rem;
+        border-radius: var(--border-radius-sm);
+        margin-top: 0.75rem;
+    }
+
+    /* Footer & Action Buttons Mobile */
+    .footer-actions {
+        position: sticky;
+        bottom: 0;
+        background-color: var(--card-bg);
+        padding: 0.75rem 0.5rem;
+        border-top: 1px solid var(--border-color);
+        margin: 1.5rem -1rem -1rem -1rem;
+        display: flex;
+        gap: 0.5rem;
+        z-index: 100;
+    }
+    
+    .footer-actions button {
+        flex: 1;
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .awardee-info-card {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}
+
+
