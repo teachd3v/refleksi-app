@@ -1,0 +1,190 @@
+[
+  {
+    "selectedUser": {
+      "name": "Inayah Ananda Devira",
+      "region": "Medan",
+      "campus": "Universitas Sumatera Utara"
+    },
+    "timeAudit": {
+      "categories": [
+        {
+          "id": "kerja",
+          "label": "Kuliah / Kerja",
+          "hours": 8,
+          "color": "#4d7c0f"
+        },
+        {
+          "id": "tidur",
+          "label": "Tidur",
+          "hours": 7,
+          "color": "#4b5563"
+        },
+        {
+          "id": "hiburan",
+          "label": "Hiburan / Sosmed",
+          "hours": 3,
+          "color": "#d97706"
+        },
+        {
+          "id": "organisasi",
+          "label": "Organisasi",
+          "hours": 2,
+          "color": "#0284c7"
+        },
+        {
+          "id": "ibadah",
+          "label": "Ibadah",
+          "hours": 1.5,
+          "color": "#7c3aed"
+        },
+        {
+          "id": "keluarga",
+          "label": "Keluarga",
+          "hours": 0.5,
+          "color": "#db2777"
+        },
+        {
+          "id": "lainnya",
+          "label": "Lainnya",
+          "hours": 2,
+          "color": "#9ca3af"
+        }
+      ],
+      "mostTime": "kerja",
+      "mostMeaning": "ibadah"
+    },
+    "roles": [
+      {
+        "name": "Anak",
+        "color": "note-yellow"
+      },
+      {
+        "name": "Mahasiswa",
+        "color": "note-orange"
+      },
+      {
+        "name": "Awardee",
+        "color": "note-green"
+      },
+      {
+        "name": "Ketua Organisasi",
+        "color": "note-pink"
+      },
+      {
+        "name": "Mentor",
+        "color": "note-green"
+      },
+      {
+        "name": "Teman",
+        "color": "note-blue"
+      }
+    ],
+    "roleReflection": {
+      "dominant": "Ketua Organisasi",
+      "heaviest": "Mentor",
+      "neglected": "Awardee",
+      "proud": "Teman",
+      "text": ""
+    },
+    "contribution": {
+      "person": "Budi",
+      "action": "Kasih Beasiswa",
+      "change": "Jadi Penghafal Quran"
+    },
+    "timestamp": "2026-07-02T05:49:21.385Z"
+  },
+  {
+    "selectedUser": {
+      "name": "Putri Maharani",
+      "region": "Medan",
+      "campus": "Universitas Sumatera Utara"
+    },
+    "timeAudit": {
+      "categories": [
+        {
+          "id": "kerja",
+          "label": "Kuliah / Kerja",
+          "hours": 8,
+          "color": "#4d7c0f"
+        },
+        {
+          "id": "tidur",
+          "label": "Tidur",
+          "hours": 7,
+          "color": "#4b5563"
+        },
+        {
+          "id": "hiburan",
+          "label": "Hiburan / Sosmed",
+          "hours": 3,
+          "color": "#d97706"
+        },
+        {
+          "id": "organisasi",
+          "label": "Organisasi",
+          "hours": 2,
+          "color": "#0284c7"
+        },
+        {
+          "id": "ibadah",
+          "label": "Ibadah",
+          "hours": 1.5,
+          "color": "#7c3aed"
+        },
+        {
+          "id": "keluarga",
+          "label": "Keluarga",
+          "hours": 0.5,
+          "color": "#db2777"
+        },
+        {
+          "id": "lainnya",
+          "label": "Lainnya",
+          "hours": 2,
+          "color": "#9ca3af"
+        }
+      ],
+      "mostTime": "kerja",
+      "mostMeaning": "hiburan"
+    },
+    "roles": [
+      {
+        "name": "Anak",
+        "color": "note-yellow"
+      },
+      {
+        "name": "Mahasiswa",
+        "color": "note-orange"
+      },
+      {
+        "name": "Awardee",
+        "color": "note-green"
+      },
+      {
+        "name": "Ketua Organisasi",
+        "color": "note-pink"
+      },
+      {
+        "name": "Mentor",
+        "color": "note-green"
+      },
+      {
+        "name": "Teman",
+        "color": "note-blue"
+      }
+    ],
+    "roleReflection": {
+      "dominant": "Ketua Organisasi",
+      "heaviest": "Mahasiswa",
+      "neglected": "Mentor",
+      "proud": "Anak",
+      "text": ""
+    },
+    "contribution": {
+      "person": "Asih",
+      "action": "Begituolah",
+      "change": "Yayayaya"
+    },
+    "timestamp": "2026-07-02T05:43:01.467Z"
+  }
+]

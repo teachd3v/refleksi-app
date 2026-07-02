@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - RuangRefleksi</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Admin-specific layout adjustments */
+        body {
+            height: auto;
+            overflow-y: auto;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .metric-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background-color: var(--accent-light);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-info h4 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-info .metric-num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1.5px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container-admin {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Submissions table styling */
+        .table-card {
+            grid-column: 1 / -1;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .story-block {
+            max-width: 350px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .story-block p {
+            margin-bottom: 0.25rem;
+        }
+
+        .story-block strong {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-title">
+            <i data-lucide="bar-chart-2"></i>
+            <span>Dashboard Admin RuangRefleksi</span>
+        </div>
+        <a href="/" class="btn btn-secondary">
+            <i data-lucide="arrow-left"></i> Kembali ke Form
+        </a>
+    </header>
+
+    <main class="main-container" style="max-width: 1280px; overflow: visible;">
+        <!-- Metrics Summary Row -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-icon-box"><i data-lucide="users"></i></div>
+                <div class="metric-info">
+                    <h4>Total Pengisi</h4>
+                    <div class="metric-num" id="metricTotal">0</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon-box"><i data-lucide="map-pin"></i></div>
+                <div class="metric-info">
+                    <h4>Wilayah Terwakili</h4>
+                    <div class="metric-num" id="metricWilayah">0</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon-box"><i data-lucide="school"></i></div>
+                <div class="metric-info">
+                    <h4>Kampus Terdaftar</h4>
+                    <div class="metric-num" id="metricKampus">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Visualizations Grid -->
+        <div class="admin-grid">
+            <!-- Card 1: Average Time Audit -->
+            <div class="admin-card">
+                <h3><i data-lucide="clock" class="text-green"></i> Rata-rata Pembagian Waktu (24 Jam)</h3>
+                <div class="chart-container-admin">
+                    <canvas id="avgTimeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Card 2: Top Roles -->
+            <div class="admin-card">
+                <h3><i data-lucide="contact-2" class="text-brown"></i> Peran Terbanyak yang Dijalankan</h3>
+                <div class="chart-container-admin">
+                    <canvas id="topRolesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Card 3: Submissions by Region -->
+            <div class="admin-card">
+                <h3><i data-lucide="globe"></i> Distribusi Wilayah Awardee</h3>
+                <div class="chart-container-admin">
+                    <canvas id="regionsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Card 4: Most Meaningful Activities -->
+            <div class="admin-card">
+                <h3><i data-lucide="star" class="text-warning"></i> Aktivitas Paling Bermakna</h3>
+                <div class="chart-container-admin">
+                    <canvas id="meaningfulChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Card 5: Table of all stories -->
+            <div class="admin-card table-card">
+                <h3><i data-lucide="book-open" class="text-gold"></i> Cerita Dampak Kontribusi (Empty Chair)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama / Identitas</th>
+                                <th>Fokus Waktu</th>
+                                <th>Paling Bermakna</th>
+                                <th>Cerita Dampak (Empty Chair)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody">
+                            <!-- Populated dynamically -->
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">Belum ada data refleksi masuk.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 RuangRefleksi. Halaman Panel Administrasi.</p>
+    </footer>
+
+    <!-- Admin dashboard script -->
+    <script src="admin.js"></script>
+</body>
+</html>
