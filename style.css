@@ -73,6 +73,11 @@
     padding: 0;
 }
 
+html {
+    background-color: var(--bg-secondary);
+    min-height: 100vh;
+}
+
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--bg-primary);
@@ -83,7 +88,12 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden; /* Prevent body scroll on desktop */
+    overflow: hidden; /* Contain inner scrolls */
+    max-width: 450px;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgba(30, 70, 54, 0.08);
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
 }
 
 /* Ambient glow in background */
@@ -172,10 +182,9 @@ body {
 /* Main Container & Progress */
 .main-container {
     flex: 1;
-    max-width: 1350px;
     width: 100%;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0.75rem 1rem;
     display: flex;
     flex-direction: column;
     overflow: hidden; /* Contain inner scrolls */
@@ -1224,6 +1233,15 @@ body {
     .awardee-info-card {
         grid-template-columns: 1fr;
         gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        max-width: 100%;
+        border-left: none;
+        border-right: none;
+        box-shadow: none;
     }
 }
 
