@@ -1,8 +1,17 @@
+let allSubmissions = [];
+let charts = {
+    avgTime: null,
+    topRoles: null,
+    regions: null,
+    meaningful: null
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Icons
     lucide.createIcons();
 
     fetchDataAndBuildDashboard();
+    setupFilterListeners();
 });
 
 function fetchDataAndBuildDashboard() {
@@ -14,16 +23,68 @@ function fetchDataAndBuildDashboard() {
                 return;
             }
 
-            updateMetrics(data);
-            buildAverageTimeChart(data);
-            buildTopRolesChart(data);
-            buildRegionsChart(data);
-            buildMeaningfulChart(data);
-            buildSubmissionsTable(data);
+            allSubmissions = data;
+            populateRegionFilter(data);
+            filterAndBuildDashboard();
         })
         .catch(err => {
             console.error('Gagal mengambil data submissions:', err);
         });
+}
+
+function populateRegionFilter(data) {
+    const filterWilayah = document.getElementById('filterWilayah');
+    const regions = new Set();
+    
+    data.forEach(item => {
+        if (item.selectedUser?.region) {
+            regions.add(item.selectedUser.region);
+        }
+    });
+
+    // Clear existing options except the first one
+    filterWilayah.innerHTML = '<option value="">Semua Wilayah</option>';
+    
+    // Sort and add regions
+    Array.from(regions).sort().forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        filterWilayah.appendChild(option);
+    });
+}
+
+function setupFilterListeners() {
+    const filterNama = document.getElementById('filterNama');
+    const filterWilayah = document.getElementById('filterWilayah');
+    const btnResetFilter = document.getElementById('btnResetFilter');
+
+    filterNama.addEventListener('input', filterAndBuildDashboard);
+    filterWilayah.addEventListener('change', filterAndBuildDashboard);
+    
+    btnResetFilter.addEventListener('click', () => {
+        filterNama.value = '';
+        filterWilayah.value = '';
+        filterAndBuildDashboard();
+    });
+}
+
+function filterAndBuildDashboard() {
+    const namaQuery = document.getElementById('filterNama').value.toLowerCase().trim();
+    const wilayahQuery = document.getElementById('filterWilayah').value;
+
+    const filteredData = allSubmissions.filter(item => {
+        const matchNama = !namaQuery || (item.selectedUser?.name || '').toLowerCase().includes(namaQuery);
+        const matchWilayah = !wilayahQuery || item.selectedUser?.region === wilayahQuery;
+        return matchNama && matchWilayah;
+    });
+
+    updateMetrics(filteredData);
+    buildAverageTimeChart(filteredData);
+    buildTopRolesChart(filteredData);
+    buildRegionsChart(filteredData);
+    buildMeaningfulChart(filteredData);
+    buildSubmissionsTable(filteredData);
 }
 
 function updateMetrics(data) {
@@ -77,7 +138,10 @@ function buildAverageTimeChart(data) {
     });
 
     const ctx = document.getElementById('avgTimeChart').getContext('2d');
-    new Chart(ctx, {
+    if (charts.avgTime) {
+        charts.avgTime.destroy();
+    }
+    charts.avgTime = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -121,7 +185,10 @@ function buildTopRolesChart(data) {
     const counts = sorted.map(s => s[1]);
 
     const ctx = document.getElementById('topRolesChart').getContext('2d');
-    new Chart(ctx, {
+    if (charts.topRoles) {
+        charts.topRoles.destroy();
+    }
+    charts.topRoles = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -161,7 +228,10 @@ function buildRegionsChart(data) {
     const colors = ['#1e4636', '#2d5a27', '#4d7c0f', '#0ca678', '#0284c7', '#7c3aed', '#d97706', '#9ca3af'];
 
     const ctx = document.getElementById('regionsChart').getContext('2d');
-    new Chart(ctx, {
+    if (charts.regions) {
+        charts.regions.destroy();
+    }
+    charts.regions = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: labels,
@@ -204,7 +274,10 @@ function buildMeaningfulChart(data) {
     const counts = Object.values(freq);
 
     const ctx = document.getElementById('meaningfulChart').getContext('2d');
-    new Chart(ctx, {
+    if (charts.meaningful) {
+        charts.meaningful.destroy();
+    }
+    charts.meaningful = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -232,6 +305,17 @@ function buildMeaningfulChart(data) {
 function buildSubmissionsTable(data) {
     const tableBody = document.getElementById('submissionsTableBody');
     tableBody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                Tidak ada data refleksi yang cocok dengan filter pencarian.
+            </td>
+        `;
+        tableBody.appendChild(tr);
+        return;
+    }
 
     const categoryLabels = {
         'kerja': 'Kuliah / Kerja', 'tidur': 'Tidur', 'hiburan': 'Hiburan / Sosmed', 'organisasi': 'Organisasi', 'ibadah': 'Ibadah', 'keluarga': 'Keluarga', 'lainnya': 'Lainnya'

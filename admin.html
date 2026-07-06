@@ -186,6 +186,30 @@
     </header>
 
     <main class="main-container" style="max-width: 1280px; overflow: visible;">
+        <!-- Filter Card -->
+        <div class="admin-card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+            <h3 style="margin-bottom: 0.75rem; border-bottom: none; padding-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="filter"></i> Filter Data
+            </h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1; min-width: 200px;">
+                    <label for="filterNama" style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-primary);">Cari Nama</label>
+                    <input type="text" id="filterNama" placeholder="Ketik nama awardee..." style="width: 100%; padding: 0.6rem 0.8rem; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); background-color: var(--bg-primary); color: var(--text-primary); font-family: inherit; font-size: 0.85rem;">
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <label for="filterWilayah" style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-primary);">Pilih Wilayah</label>
+                    <select id="filterWilayah" style="width: 100%; padding: 0.6rem 0.8rem; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); background-color: var(--bg-primary); color: var(--text-primary); font-family: inherit; font-size: 0.85rem;">
+                        <option value="">Semua Wilayah</option>
+                    </select>
+                </div>
+                <div>
+                    <button id="btnResetFilter" class="btn btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem; height: 38px; display: flex; align-items: center; gap: 0.25rem;">
+                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Metrics Summary Row -->
         <div class="metrics-row">
             <div class="metric-card">
