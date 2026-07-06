@@ -24,12 +24,31 @@ function fetchDataAndBuildDashboard() {
             }
 
             allSubmissions = data;
+            populateNameDatalist(data);
             populateRegionFilter(data);
             filterAndBuildDashboard();
         })
         .catch(err => {
             console.error('Gagal mengambil data submissions:', err);
         });
+}
+
+function populateNameDatalist(data) {
+    const datalist = document.getElementById('namaList');
+    const names = new Set();
+    
+    data.forEach(item => {
+        if (item.selectedUser?.name) {
+            names.add(item.selectedUser.name);
+        }
+    });
+
+    datalist.innerHTML = '';
+    Array.from(names).sort().forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        datalist.appendChild(option);
+    });
 }
 
 function populateRegionFilter(data) {

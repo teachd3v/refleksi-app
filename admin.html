@@ -194,7 +194,8 @@
             <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
                 <div style="flex: 1; min-width: 200px;">
                     <label for="filterNama" style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-primary);">Cari Nama</label>
-                    <input type="text" id="filterNama" placeholder="Ketik nama awardee..." style="width: 100%; padding: 0.6rem 0.8rem; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); background-color: var(--bg-primary); color: var(--text-primary); font-family: inherit; font-size: 0.85rem;">
+                    <input type="text" id="filterNama" list="namaList" placeholder="Ketik atau pilih nama..." style="width: 100%; padding: 0.6rem 0.8rem; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); background-color: var(--bg-primary); color: var(--text-primary); font-family: inherit; font-size: 0.85rem;">
+                    <datalist id="namaList"></datalist>
                 </div>
                 <div style="flex: 1; min-width: 200px;">
                     <label for="filterWilayah" style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-primary);">Pilih Wilayah</label>
