@@ -73,6 +73,55 @@ function doPost(e) {
                          .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+function doGet(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var rows = sheet.getDataRange().getValues();
+    var headers = rows[0];
+    var data = [];
+    
+    for (var i = 1; i < rows.length; i++) {
+      var row = rows[i];
+      
+      // Parse roles back into array of objects
+      var rolesString = row[6] || '';
+      var rolesArray = rolesString ? rolesString.split('; ').map(function(r) { return { name: r }; }) : [];
+      
+      var submission = {
+        timestamp: row[0],
+        selectedUser: {
+          name: row[1],
+          region: row[2],
+          campus: row[3]
+        },
+        timeAudit: {
+          mostTime: row[4],
+          mostMeaning: row[5]
+        },
+        roles: rolesArray,
+        roleReflection: {
+          dominant: row[7],
+          heaviest: row[8],
+          neglected: row[9],
+          proud: row[10]
+        },
+        contribution: {
+          person: row[11],
+          action: row[12],
+          change: row[13]
+        }
+      };
+      data.push(submission);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify(data))
+                         .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "result": "error", "error": error.toString() }))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 ```
 
 3. Klik ikon **Simpan (Save)** di atas editor.

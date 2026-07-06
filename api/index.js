@@ -96,9 +96,21 @@ app.post('/api/submit', (req, res) => {
 });
 
 // API: Get all submissions
-// Since Vercel is stateless, we also attempt to fetch from Google Sheets if needed,
-// but for now, we'll try to read from /tmp or return empty so it doesn't crash.
-app.get('/api/submissions', (req, res) => {
+// Fetch data from Google Sheets first, with local /tmp backup as fallback
+app.get('/api/submissions', async (req, res) => {
+    try {
+        const url = 'https://script.google.com/macros/s/AKfycbyj6UwGAY3b6C6v0OO-B_Mnio8857iJsEH8Y3MKG0K4EFLFefE40DweFEiEC_0jmOs4Pw/exec';
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                return res.status(200).json(data);
+            }
+        }
+    } catch (error) {
+        console.warn('Gagal mengambil data dari Google Sheets, menggunakan database lokal:', error.message);
+    }
+
     try {
         if (fs.existsSync(DATA_FILE)) {
             const fileData = fs.readFileSync(DATA_FILE, 'utf8');
@@ -107,7 +119,7 @@ app.get('/api/submissions', (req, res) => {
         }
         res.status(200).json([]);
     } catch (error) {
-        console.error('Error reading submissions:', error);
+        console.error('Error reading submissions from backup:', error);
         res.status(500).json({ success: false, error: 'Gagal mengambil data dari database.' });
     }
 });
