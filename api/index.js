@@ -100,7 +100,7 @@ app.post('/api/submit', (req, res) => {
 // Fetch data from Google Sheets first, with local /tmp backup as fallback
 app.get('/api/submissions', async (req, res) => {
     try {
-        const url = 'https://script.google.com/macros/s/AKfycbyj6UwGAY3b6C6v0OO-B_Mnio8857iJsEH8Y3MKG0K4EFLFefE40DweFEiEC_0jmOs4Pw/exec';
+        const url = 'https://script.google.com/macros/s/AKfycbyKKBGLNVeDgJQc8MX61QJzbEYzBCUw16KRzVu6q3dFL1nBo0cOv_3nFpfbv0k01w-nmg/exec';
         const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
@@ -127,7 +127,7 @@ app.get('/api/submissions', async (req, res) => {
 
 // Helper: Forward data to Google Apps Script Web App
 async function forwardToGoogleSheets(data) {
-    const url = 'https://script.google.com/macros/s/AKfycbyj6UwGAY3b6C6v0OO-B_Mnio8857iJsEH8Y3MKG0K4EFLFefE40DweFEiEC_0jmOs4Pw/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbyKKBGLNVeDgJQc8MX61QJzbEYzBCUw16KRzVu6q3dFL1nBo0cOv_3nFpfbv0k01w-nmg/exec';
     
     const response = await fetch(url, {
         method: 'POST',
