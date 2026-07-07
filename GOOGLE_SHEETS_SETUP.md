@@ -12,7 +12,7 @@ Metode ini tidak memerlukan konfigurasi Google Cloud Console yang rumit. Anda cu
 ### Langkah 1: Siapkan Google Sheets Anda
 1. Buat Google Sheets baru di Google Drive Anda.
 2. Tulis baris pertama sebagai **Header** kolom (sesuaikan urutannya):
-   `Timestamp` | `Nama` | `Wilayah` | `Kampus` | `Fokus Waktu` | `Paling Bermakna` | `Roles` | `Dominan` | `Terberat` | `Diabaikan` | `Paling Bangga` | `Penerima Dampak` | `Kontribusi` | `Perubahan`
+   `Timestamp` | `Nama` | `Wilayah` | `Kampus` | `Fokus Waktu` | `Paling Bermakna` | `Roles` | `Dominan` | `Terberat` | `Diabaikan` | `Paling Bangga` | `Penerima Dampak` | `Kontribusi` | `Perubahan` | `Detail Waktu`
 3. Catat **ID Spreadsheet** Anda (ada di URL Google Sheets Anda):
    `https://docs.google.com/spreadsheets/d/ID_SPREADSHEET_ANDA/edit`
 
@@ -43,7 +43,8 @@ function doPost(e) {
       data.roleReflection ? data.roleReflection.proud : '',
       data.contribution ? data.contribution.person : '',
       data.contribution ? data.contribution.action : '',
-      data.contribution ? data.contribution.change : ''
+      data.contribution ? data.contribution.change : '',
+      data.timeAudit && data.timeAudit.categories ? JSON.stringify(data.timeAudit.categories) : ''
     ];
     
     // Cari apakah nama sudah terdaftar di kolom B (kolom ke-2)
@@ -88,6 +89,15 @@ function doGet(e) {
       var rolesString = row[6] || '';
       var rolesArray = rolesString ? rolesString.split('; ').map(function(r) { return { name: r }; }) : [];
       
+      // Parse categories from column 15 (index 14)
+      var categoriesArray = [];
+      try {
+        var categoriesString = row[14] || '';
+        categoriesArray = categoriesString ? JSON.parse(categoriesString) : [];
+      } catch (err) {
+        // Fallback jika json parsing bermasalah
+      }
+      
       var submission = {
         timestamp: row[0],
         selectedUser: {
@@ -97,7 +107,8 @@ function doGet(e) {
         },
         timeAudit: {
           mostTime: row[4],
-          mostMeaning: row[5]
+          mostMeaning: row[5],
+          categories: categoriesArray
         },
         roles: rolesArray,
         roleReflection: {

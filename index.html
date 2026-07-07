@@ -65,9 +65,11 @@
                 <div class="awardee-selector-container">
                     <label for="awardeeSearchInput" class="field-label">Pilih Identitas Diri (Awardee):</label>
                     <div class="searchable-select">
-                        <input type="text" id="awardeeSearchInput" placeholder="Cari nama Anda..." autocomplete="off" class="custom-input">
+                        <input type="text" id="awardeeSearchInput" placeholder="Memuat data awardee..." autocomplete="off" class="custom-input" disabled style="opacity: 0.6; cursor: wait;">
                         <div class="search-options" id="searchOptionsList">
-                            <!-- Populated dynamically from CSV -->
+                            <div class="search-option-item" style="color: var(--text-muted); cursor: default; display: flex; align-items: center; gap: 8px;">
+                                <div class="spinner"></div> Sedang memuat database awardee...
+                            </div>
                         </div>
                     </div>
                     <div class="awardee-info-card" id="awardeeInfoCard">
@@ -324,6 +326,14 @@
     </main>
 
 
+
+    <!-- Loading Overlay -->
+    <div id="globalLoader" class="loading-overlay">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p id="loaderMessage">Sedang memproses...</p>
+        </div>
+    </div>
 
     <!-- App Script -->
     <script src="app.js"></script>

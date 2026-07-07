@@ -19,7 +19,7 @@ function initDatabase() {
         fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2), 'utf8');
     }
     if (!fs.existsSync(CSV_FILE)) {
-        const headers = 'Timestamp,Nama,Wilayah,Kampus,Fokus Waktu,Paling Bermakna,Roles,Dominan,Terberat,Diabaikan,Paling Bangga,Penerima Dampak,Kontribusi,Perubahan\n';
+        const headers = 'Timestamp,Nama,Wilayah,Kampus,Fokus Waktu,Paling Bermakna,Roles,Dominan,Terberat,Diabaikan,Paling Bangga,Penerima Dampak,Kontribusi,Perubahan,Detail Waktu\n';
         fs.writeFileSync(CSV_FILE, headers, 'utf8');
     }
 }
@@ -67,11 +67,12 @@ app.post('/api/submit', (req, res) => {
             escapeCSV(submission.roleReflection?.proud),
             escapeCSV(submission.contribution?.person),
             escapeCSV(submission.contribution?.action),
-            escapeCSV(submission.contribution?.change)
+            escapeCSV(submission.contribution?.change),
+            escapeCSV(submission.timeAudit?.categories ? JSON.stringify(submission.timeAudit.categories) : '')
         ].join(',') + '\n';
 
         // Re-write CSV file entirely to keep it synced and avoid duplicate entries
-        let csvContent = 'Timestamp,Nama,Wilayah,Kampus,Fokus Waktu,Paling Bermakna,Roles,Dominan,Terberat,Diabaikan,Paling Bangga,Penerima Dampak,Kontribusi,Perubahan\n';
+        let csvContent = 'Timestamp,Nama,Wilayah,Kampus,Fokus Waktu,Paling Bermakna,Roles,Dominan,Terberat,Diabaikan,Paling Bangga,Penerima Dampak,Kontribusi,Perubahan,Detail Waktu\n';
         submissions.forEach(s => {
             csvContent += [
                 escapeCSV(s.timestamp),
@@ -87,7 +88,8 @@ app.post('/api/submit', (req, res) => {
                 escapeCSV(s.roleReflection?.proud),
                 escapeCSV(s.contribution?.person),
                 escapeCSV(s.contribution?.action),
-                escapeCSV(s.contribution?.change)
+                escapeCSV(s.contribution?.change),
+                escapeCSV(s.timeAudit?.categories ? JSON.stringify(s.timeAudit.categories) : '')
             ].join(',') + '\n';
         });
         fs.writeFileSync(CSV_FILE, csvContent, 'utf8');

@@ -1249,6 +1249,62 @@ body {
     }
 }
 
+/* Spinner & Loading Overlay Style */
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(30, 70, 54, 0.15);
+    border-radius: 50%;
+    border-top-color: var(--accent-color, #1e4636);
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.loader-content {
+    background-color: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e5dfd5);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg, 16px);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loader-content p {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary, #2d3832);
+}
+
 
 
 

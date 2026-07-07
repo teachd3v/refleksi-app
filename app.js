@@ -87,8 +87,22 @@ function setupAwardeeSelector() {
     ]).then(([csvText, submissions]) => {
         state.awardees = parseCSV(csvText);
         state.submissions = submissions;
+        
+        // Remove loading state
+        if (searchInput) {
+            searchInput.disabled = false;
+            searchInput.placeholder = "Cari nama Anda...";
+            searchInput.style.opacity = "1";
+            searchInput.style.cursor = "text";
+        }
+        if (optionsList) {
+            optionsList.innerHTML = '';
+        }
     }).catch(err => {
         console.error('Gagal memuat database awardee & submissions:', err);
+        if (optionsList) {
+            optionsList.innerHTML = '<div class="search-option-item" style="color: var(--note-pink-text); cursor: default;">Gagal memuat data. Silakan reload.</div>';
+        }
     });
 
     function parseCSV(text) {
@@ -820,6 +834,13 @@ function loadDraft() {
 }
 
 function submitDataToBackend() {
+    const loader = document.getElementById('globalLoader');
+    const loaderMsg = document.getElementById('loaderMessage');
+    if (loader) {
+        if (loaderMsg) loaderMsg.textContent = 'Menyimpan refleksi ke spreadsheet...';
+        loader.classList.add('active');
+    }
+
     fetch('/api/submit', {
         method: 'POST',
         headers: {
@@ -841,8 +862,15 @@ function submitDataToBackend() {
     .then(data => {
         console.log('Submission success:', data);
         localStorage.removeItem('refleksi_draft');
+        if (loader) {
+            loader.classList.remove('active');
+        }
     })
     .catch(err => {
         console.error('Failed to submit data to backend:', err);
+        if (loader) {
+            loader.classList.remove('active');
+        }
+        alert('Gagal mengirim data ke spreadsheet. Namun, draf Anda tetap tersimpan di browser ini.');
     });
 }

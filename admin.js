@@ -15,9 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchDataAndBuildDashboard() {
+    const loader = document.getElementById('adminLoader');
+    if (loader) {
+        loader.classList.add('active');
+    }
+
     fetch('/api/submissions')
         .then(res => res.json())
         .then(data => {
+            if (loader) {
+                loader.classList.remove('active');
+            }
             if (!data || data.length === 0) {
                 console.log('Belum ada data refleksi masuk.');
                 return;
@@ -29,6 +37,9 @@ function fetchDataAndBuildDashboard() {
             filterAndBuildDashboard();
         })
         .catch(err => {
+            if (loader) {
+                loader.classList.remove('active');
+            }
             console.error('Gagal mengambil data submissions:', err);
         });
 }
