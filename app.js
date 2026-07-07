@@ -858,19 +858,25 @@ function submitDataToBackend() {
             contribution: state.contribution
         })
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            return res.json().then(err => { throw new Error(err.error || 'Server error'); });
+        }
+        return res.json();
+    })
     .then(data => {
         console.log('Submission success:', data);
         localStorage.removeItem('refleksi_draft');
         if (loader) {
             loader.classList.remove('active');
         }
+        alert('Refleksi berhasil disimpan ke database spreadsheet!');
     })
     .catch(err => {
         console.error('Failed to submit data to backend:', err);
         if (loader) {
             loader.classList.remove('active');
         }
-        alert('Gagal mengirim data ke spreadsheet. Namun, draf Anda tetap tersimpan di browser ini.');
+        alert('Gagal mengirim data ke spreadsheet: ' + err.message);
     });
 }
