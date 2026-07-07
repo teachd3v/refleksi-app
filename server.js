@@ -135,6 +135,11 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+// Handle favicon.ico to prevent 404 console errors
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end();
+});
+
 // Helper: Forward data to Google Apps Script Web App
 async function forwardToGoogleSheets(data) {
     const url = 'https://script.google.com/macros/s/AKfycbyKKBGLNVeDgJQc8MX61QJzbEYzBCUw16KRzVu6q3dFL1nBo0cOv_3nFpfbv0k01w-nmg/exec';
