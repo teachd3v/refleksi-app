@@ -95,12 +95,12 @@ app.post('/api/submit', (req, res) => {
         fs.writeFileSync(CSV_FILE, csvContent, 'utf8');
 
         // Forward data to Google Apps Script Web App
-        forwardToGoogleSheets(submission);
+        await forwardToGoogleSheets(submission);
 
         res.status(200).json({ success: true, message: 'Refleksi berhasil disimpan ke database spreadsheet!' });
     } catch (error) {
         console.error('Error saving submission:', error);
-        res.status(500).json({ success: false, error: 'Gagal menyimpan data ke backend.' });
+        res.status(500).json({ success: false, error: error.message || 'Gagal menyimpan data ke backend.' });
     }
 });
 
@@ -136,32 +136,26 @@ app.get('/admin', (req, res) => {
 });
 
 // Helper: Forward data to Google Apps Script Web App
-function forwardToGoogleSheets(data) {
+async function forwardToGoogleSheets(data) {
     const url = 'https://script.google.com/macros/s/AKfycbyj6UwGAY3b6C6v0OO-B_Mnio8857iJsEH8Y3MKG0K4EFLFefE40DweFEiEC_0jmOs4Pw/exec';
-    const payload = JSON.stringify(data);
-
-    const options = {
+    
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(payload)
-        }
-    };
-
-    const req = https.request(url, options, (res) => {
-        let body = '';
-        res.on('data', (chunk) => body += chunk);
-        res.on('end', () => {
-            console.log('Google Sheets Forward Response:', body);
-        });
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     });
 
-    req.on('error', (e) => {
-        console.error('Error forwarding to Google Sheets:', e);
-    });
+    if (!response.ok) {
+        throw new Error(`Google Sheets responded with status ${response.status}`);
+    }
 
-    req.write(payload);
-    req.end();
+    const resData = await response.json();
+    if (resData.result === 'error') {
+        throw new Error(`Google Sheets Apps Script Error: ${resData.error}`);
+    }
+    return resData;
 }
 
 // Start Server
