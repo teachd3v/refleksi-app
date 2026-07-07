@@ -30,7 +30,7 @@ function initDatabase() {
 initDatabase();
 
 // API: Submit reflection data
-app.post('/api/submit', (req, res) => {
+app.post('/api/submit', async (req, res) => {
     try {
         const submission = req.body;
         submission.timestamp = new Date().toISOString();
