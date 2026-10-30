@@ -71,6 +71,64 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDraft();
 });
 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKKBGLNVeDgJQc8MX61QJzbEYzBCUw16KRzVu6q3dFL1nBo0cOv_3nFpfbv0k01w-nmg/exec';
+
+// Optimized fetcher with direct Google Apps Script call & sessionStorage caching
+// Drastically saves Vercel Fast Origin Transfer and CPU execution limits
+async function fetchSubmissionsData(forceRefresh = false) {
+    const CACHE_KEY = 'refleksi_submissions_cache';
+    const CACHE_TIME_KEY = 'refleksi_submissions_time';
+    const TTL = 5 * 60 * 1000; // 5 menit
+
+    if (!forceRefresh) {
+        try {
+            const cached = sessionStorage.getItem(CACHE_KEY);
+            const time = sessionStorage.getItem(CACHE_TIME_KEY);
+            if (cached && time && (Date.now() - parseInt(time, 10) < TTL)) {
+                return JSON.parse(cached);
+            }
+        } catch (e) {
+            console.warn('Gagal membaca cache sessionStorage:', e);
+        }
+    }
+
+    // Prioritas 1: Ambil langsung dari Google Sheets (0 MB Vercel Origin Transfer, 0s Vercel CPU)
+    try {
+        const res = await fetch(APPS_SCRIPT_URL);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                try {
+                    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                    sessionStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                } catch (e) {}
+                return data;
+            }
+        }
+    } catch (err) {
+        console.warn('Direct fetch ke Google Sheets gagal, mencoba fallback ke API Vercel:', err);
+    }
+
+    // Prioritas 2: Fallback ke Vercel Serverless Function
+    try {
+        const res = await fetch('/api/submissions');
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                try {
+                    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                    sessionStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                } catch (e) {}
+                return data;
+            }
+        }
+    } catch (err) {
+        console.error('Fallback API juga gagal:', err);
+    }
+
+    return [];
+}
+
 // Awardee searchable dropdown selection
 function setupAwardeeSelector() {
     const searchInput = document.getElementById('awardeeSearchInput');
@@ -80,10 +138,10 @@ function setupAwardeeSelector() {
     const infoKampus = document.getElementById('infoKampus');
     const btnStart = document.getElementById('btnStart');
 
-    // Fetch and parse CSV, and load submissions database
+    // Fetch and parse CSV, and load submissions database with cache
     Promise.all([
         fetch('daftar_awardee.csv').then(res => res.text()),
-        fetch('/api/submissions').then(res => res.json()).catch(() => [])
+        fetchSubmissionsData()
     ]).then(([csvText, submissions]) => {
         state.awardees = parseCSV(csvText);
         state.submissions = submissions;
@@ -867,6 +925,10 @@ function submitDataToBackend() {
     .then(data => {
         console.log('Submission success:', data);
         localStorage.removeItem('refleksi_draft');
+        try {
+            sessionStorage.removeItem('refleksi_submissions_cache');
+            sessionStorage.removeItem('refleksi_submissions_time');
+        } catch (e) {}
         if (loader) {
             loader.classList.remove('active');
         }

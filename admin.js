@@ -14,14 +14,69 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFilterListeners();
 });
 
-function fetchDataAndBuildDashboard() {
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKKBGLNVeDgJQc8MX61QJzbEYzBCUw16KRzVu6q3dFL1nBo0cOv_3nFpfbv0k01w-nmg/exec';
+
+async function fetchSubmissionsData(forceRefresh = false) {
+    const CACHE_KEY = 'refleksi_admin_submissions_cache';
+    const CACHE_TIME_KEY = 'refleksi_admin_submissions_time';
+    const TTL = 2 * 60 * 1000; // 2 menit untuk admin
+
+    if (!forceRefresh) {
+        try {
+            const cached = sessionStorage.getItem(CACHE_KEY);
+            const time = sessionStorage.getItem(CACHE_TIME_KEY);
+            if (cached && time && (Date.now() - parseInt(time, 10) < TTL)) {
+                return JSON.parse(cached);
+            }
+        } catch (e) {
+            console.warn('Gagal membaca cache sessionStorage:', e);
+        }
+    }
+
+    // Direct fetch ke Google Apps Script (0 Vercel Origin Bandwidth & 0 Vercel CPU)
+    try {
+        const res = await fetch(APPS_SCRIPT_URL);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                try {
+                    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                    sessionStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                } catch (e) {}
+                return data;
+            }
+        }
+    } catch (err) {
+        console.warn('Direct fetch ke Google Sheets gagal, mencoba fallback ke API Vercel:', err);
+    }
+
+    // Fallback ke Vercel Serverless Function
+    try {
+        const res = await fetch('/api/submissions');
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                try {
+                    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                    sessionStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+                } catch (e) {}
+                return data;
+            }
+        }
+    } catch (err) {
+        console.error('Fallback API juga gagal:', err);
+    }
+
+    return [];
+}
+
+function fetchDataAndBuildDashboard(forceRefresh = false) {
     const loader = document.getElementById('adminLoader');
     if (loader) {
         loader.classList.add('active');
     }
 
-    fetch('/api/submissions')
-        .then(res => res.json())
+    fetchSubmissionsData(forceRefresh)
         .then(data => {
             if (loader) {
                 loader.classList.remove('active');

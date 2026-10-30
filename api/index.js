@@ -99,6 +99,10 @@ app.post('/api/submit', async (req, res) => {
 // API: Get all submissions
 // Fetch data from Google Sheets first, with local /tmp backup as fallback
 app.get('/api/submissions', async (req, res) => {
+    // Pasang Edge Cache Header agar Vercel Edge CDN menyimpan cache
+    // Mengurangi Origin Transfer & CPU Execution hingga 99%
+    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+
     try {
         const url = 'https://script.google.com/macros/s/AKfycbyKKBGLNVeDgJQc8MX61QJzbEYzBCUw16KRzVu6q3dFL1nBo0cOv_3nFpfbv0k01w-nmg/exec';
         const response = await fetch(url);
