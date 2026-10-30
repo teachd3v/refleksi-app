@@ -131,7 +131,11 @@ app.get('/api/submissions', async (req, res) => {
     }
 });
 
-// Serve frontend admin page
+// Serve frontend pages
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
